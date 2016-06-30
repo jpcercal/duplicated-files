@@ -1,0 +1,15 @@
+/bower_components
+/node
+/node_modules
+/target
+/target-grunt
+/target-app
+/duplicated-files-*
+*.lock
+*.log
+*.log.*
+public/
+!public/error-screen.html
+!public/favicon.ico
+!public/index.html
+!public/splash-screen.html
