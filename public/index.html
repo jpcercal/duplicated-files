@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html ng-app="App" ng-controller="CoreController" ng-init="baseUrl = 'http://localhost:9000/'">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css' />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="assets/css/duplicated-files.css" />
+</head>
+<body class="home" ng-clock>
+    <toast></toast>
+    <div class="container-fluid" ng-controller="FileController">
+        <div class="colors row">
+            <div class="col-xs-2 bgcolor-red"></div>
+            <div class="col-xs-2 bgcolor-orange"></div>
+            <div class="col-xs-2 bgcolor-yellow"></div>
+            <div class="col-xs-2 bgcolor-green"></div>
+            <div class="col-xs-2 bgcolor-blue"></div>
+            <div class="col-xs-2 bgcolor-darkblue"></div>
+        </div>
+        <form class="directories" name="directoryForm" ng-submit="!directoryForm.$invalid && submitDirectoryForm()">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Directories</h3>
+                </div>
+                <div class="panel-body">
+                    <textarea name="directories" class="form-control" rows="8" placeholder="Directories that will be used to search for duplicated files." ng-required="true" ng-model="directories" ng-minlength="1"></textarea>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="has-error">
+                                <p ng-show="directoryForm.directories.$error.required" class="help-block">Directory is required.</p>
+                                <p ng-show="directoryForm.directories.$error.minlength" class="help-block">Directory is too short.</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 colors">
+                            <button type="submit" class="btn pull-right" ng-class="{'btn-success': !directoryForm.$invalid}" ng-disabled="directoryForm.$invalid">
+                                <span class="fa fa-commenting-o" aria-hidden="true"></span> Search for duplicated files
+                            </button>
+                            <span class="badge pull-right directories-length" ng-class="{true: 'bgcolor-red', false: 'bgcolor-green'}[getNumberOfLines(directories) < 1]">{{ getNumberOfLines(directories) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div>
+            <form class="duplicatedFilesForm" name="duplicatedFilesForm">
+                <div ng-repeat="(hashMd5, files) in duplicatedFiles">
+                    <div class="panel panel-default">
+                        <div>
+                            <h3 class="panel-title colors">
+                                <span class="badge badge-header bgcolor-darkblue">Type: {{ files[0].metadata.type }}</span>
+                                <span class="badge badge-header bgcolor-darkblue">Size: {{ files[0].metadata.size }}</span>
+                                <span class="badge badge-header bgcolor-darkblue">Height: {{ files[0].metadata.height }}</span>
+                                <span class="badge badge-header bgcolor-darkblue">Width: {{ files[0].metadata.width }}</span>
+                                <span class="badge badge-header bgcolor-darkblue">Filenames: <em ng-repeat="file in files">{{ file.name }}{{ !$last ? '; ' : '.' }}</em></span>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="file" ng-repeat="file in files">
+                                <label tooltips tooltip-template="{{ file.checked ? 'This picture will be removed.' : 'This picture will be maintained.' }}">
+                                    <input type="checkbox" ng-model="file.checked" ng-init="file.checked = !$first" ng-checked="!$first" />
+                                    <img ng-src="{{ getPictureUrl(file.absolutePath) }}" alt="{{ file.name }}" class="img-thumbnail" ng-class="{'checked': file.checked}">
+                                    <span class="status" ng-class="{'will-be-removed': file.checked}">
+                                        <i ng-show="file.checked" class="fa fa-close" aria-hidden="true"></i>
+                                        <i ng-show="!file.checked" class="fa fa-check" aria-hidden="true"></i>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <span class="badge">Hash MD5 {{ hashMd5 }}</span>
+                            <span class="badge">{{ files.length }} duplicated files</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-danger pull-right" ng-click="submitDuplicatedFilesForm()">
+                    <span class="fa fa-trash" aria-hidden="true"></span> Delete all gray pictures
+                </button>
+            </form>
+        </div>
+        <footer class="footer">
+            #DuplicatedFiles
+        </footer>
+    </div>
+    <script type="text/javascript" src="assets/js/duplicated-files.js"></script>
+</body>
+</html>
