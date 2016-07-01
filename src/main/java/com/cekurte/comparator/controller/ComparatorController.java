@@ -5,20 +5,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cekurte.comparator.file.ComparableFile;
 import com.cekurte.comparator.file.DirectoryIterator;
 import com.cekurte.comparator.file.DuplicatedFiles;
-import com.cekurte.comparator.file.FileComparator;
 import com.cekurte.comparator.file.JsonMapper;
 import com.cekurte.comparator.http.DirectoryRequestBody;
 import com.cekurte.comparator.http.HashableFilesRequestBody;
@@ -26,33 +26,9 @@ import com.sun.jna.platform.FileUtils;
 
 @RestController
 @RequestMapping("/api")
-public class PictureComparatorController {
+public class ComparatorController {
 
-    @RequestMapping(value="/remove-files", method=RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void removeDuplicadedPictures(@RequestBody HashableFilesRequestBody request)
-    {
-        System.out.println("Removing duplicated files...");
-
-        FileUtils fileUtils = FileUtils.getInstance();
-
-        for (String key : request.getDuplicatedFiles().keySet()) {
-            Collection<JsonMapper> col = request.getDuplicatedFiles().get(key);
-            for (JsonMapper mapper : col) {
-                if (fileUtils.hasTrash()) {
-                    try {
-                        fileUtils.moveToTrash(new File[] {
-                            new File(mapper.getAbsoluteFile())
-                        });
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    System.out.println("No Trash available.");
-                }
-            }
-        }
-    }
-
+    @ExceptionHandler({Throwable.class})
     @RequestMapping(value="/duplicated-files", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Collection<ComparableFile>> searchForDuplicadedPictures(@RequestBody DirectoryRequestBody request)
     {
@@ -98,6 +74,33 @@ public class PictureComparatorController {
             return runnable.getDuplicatedFiles();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @ExceptionHandler({Throwable.class})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RequestMapping(value="/remove-files", method=RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void removeDuplicadedPictures(@RequestBody HashableFilesRequestBody request)
+    {
+        System.out.println("Removing duplicated files...");
+
+        FileUtils fileUtils = FileUtils.getInstance();
+
+        for (String key : request.getDuplicatedFiles().keySet()) {
+            Collection<JsonMapper> col = request.getDuplicatedFiles().get(key);
+            for (JsonMapper mapper : col) {
+                if (fileUtils.hasTrash()) {
+                    try {
+                        fileUtils.moveToTrash(new File[] {
+                            new File(mapper.getAbsoluteFile())
+                        });
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    System.out.println("No Trash available.");
+                }
+            }
         }
     }
 }
