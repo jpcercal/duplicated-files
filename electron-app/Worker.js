@@ -22,7 +22,7 @@ Worker.prototype.executeCommand = function (command, args) {
 };
 
 Worker.prototype.plataformIsWindows = function () {
-    return plataform.indexOf('win') > -1;
+    return !(plataform.indexOf('win') > -1);
 };
 
 Worker.prototype.commandExists = function (command) {

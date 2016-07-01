@@ -30,14 +30,14 @@ HttpServer.prototype.isStarted = function () {
 
 HttpServer.prototype.start = function (callbackSuccess, callbackError) {
     var executeNodeServer = function () {
+        var executor = new Worker();
+
         var cmd  = 'node';
         var args = [
             './node_modules/http-server/bin/http-server',
-            'c:/',
+            executor.plataformIsWindows() ? 'c:/' : '/',
             '8080'
         ];
-
-        var executor = new Worker();
 
         var deferred = $q.defer();
 
@@ -59,13 +59,13 @@ HttpServer.prototype.start = function (callbackSuccess, callbackError) {
     };
 
     var executeJavaServer = function () {
+        var executor = new Worker();
+
         var cmd  = 'java';
         var args = [
             '-jar',
             './target/comparator-0.0.1-SNAPSHOT.jar'
         ];
-
-        var executor = new Worker();
 
         var deferred = $q.defer();
 

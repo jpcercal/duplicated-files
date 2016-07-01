@@ -49,6 +49,13 @@ app.on('window-all-closed', function () {
     }
 });
 
+app.on('quit', function () {
+    console.info('Killing dependencies...');
+
+    process.kill(server.getNodePid());
+    process.kill(server.getJavaPid());
+});
+
 app.on('activate', function () {
     console.info('Running the event "activate".');
 
