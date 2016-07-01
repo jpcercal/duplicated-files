@@ -5,6 +5,10 @@ const BrowserWindow = electron.BrowserWindow;
 const Menu          = electron.Menu;
 const Tray          = electron.Tray;
 
+require('./node_modules/dotenv/lib/main').config({
+    path: __dirname + '/.env'
+});
+
 const SplashScreen = require('./electron-app/splash-screen.js');
 const ErrorScreen  = require('./electron-app/error-screen.js');
 const MainScreen   = require('./electron-app/main-screen.js');
@@ -18,11 +22,18 @@ let errorScreen;
 
 let server = new HttpServer();
 
-server.start(function (nodePid, javaPid) {
-    console.info('Status of dependencies: ' + (server.isStarted() ? 'ON' : 'OFF'));
+server.start(function () {
+    if (server.isStarted()) {
+        console.info('The HTTP Server was started.');
+    }
 
-    console.info('PID [node]: ' + server.getNodePid());
-    console.info('PID [java]: ' + server.getJavaPid());
+    if (server.nodeIsStarted()) {
+        console.info('PID [node]: ' + server.getNodePid());
+    }
+
+    if (server.javaIsStarted()) {
+        console.info('PID [java]: ' + server.getJavaPid());
+    }
 
     mainScreen = (new MainScreen()).getBrowserWindow();
 
@@ -52,8 +63,13 @@ app.on('window-all-closed', function () {
 app.on('quit', function () {
     console.info('Killing dependencies...');
 
-    process.kill(server.getNodePid());
-    process.kill(server.getJavaPid());
+    if (server.nodeIsStarted()) {
+        process.kill(server.getNodePid());
+    }
+
+    if (server.javaIsStarted()) {
+        process.kill(server.getJavaPid());
+    }
 });
 
 app.on('activate', function () {

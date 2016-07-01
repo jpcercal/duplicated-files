@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html ng-app="App" ng-controller="CoreController" ng-init="baseUrl = 'http://localhost:9000/'">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css' />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="assets/css/duplicated-files.css" />
+</head>
+<body class="error-screen" ng-clock>
+    <div class="container-fluid" ng-controller="ErrorScreenController">
+        <div class="colors row">
+            <div class="col-xs-2 bgcolor-red"></div>
+            <div class="col-xs-2 bgcolor-orange"></div>
+            <div class="col-xs-2 bgcolor-yellow"></div>
+            <div class="col-xs-2 bgcolor-green"></div>
+            <div class="col-xs-2 bgcolor-blue"></div>
+            <div class="col-xs-2 bgcolor-darkblue"></div>
+        </div>
+        <header class="row">
+            <h1 class="text-center">An Error occurred</h1>
+            <p class="text-center">Check the logs to see in details what occurred.</p>
+        </header>
+        <footer class="row">
+            <img src="assets/images/brand.png" title="Cekurte" />
+        </footer>
+    </div>
+    <div class="colors fixed-footer">
+        <div class="col-xs-2 bgcolor-red"></div>
+        <div class="col-xs-2 bgcolor-orange"></div>
+        <div class="col-xs-2 bgcolor-yellow"></div>
+        <div class="col-xs-2 bgcolor-green"></div>
+        <div class="col-xs-2 bgcolor-blue"></div>
+        <div class="col-xs-2 bgcolor-darkblue"></div>
+    </div>
+    <script type="text/javascript" src="assets/js/duplicated-files.js"></script>
+</body>
+</html>

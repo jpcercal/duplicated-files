@@ -8,8 +8,8 @@
 *.lock
 *.log
 *.log.*
-public/
-!public/error-screen.html
-!public/favicon.ico
-!public/index.html
-!public/splash-screen.html
+/public
+!/public/error-screen.html
+!/public/favicon.ico
+!/public/index.html
+!/public/splash-screen.html

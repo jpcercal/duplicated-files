@@ -24,8 +24,25 @@ HttpServer.prototype.javaIsStarted = function () {
     return this.pid.java !== null;
 };
 
+HttpServer.prototype.javaIsDisabled = function () {
+    if (process.env.HTTP_SERVER_JAVA_DISABLED === 'undefined') {
+        return false;
+    }
+
+    var validValues = [
+        '1',
+        'true',
+        'yes',
+        'on'
+    ];
+
+    var currentValue = process.env.HTTP_SERVER_JAVA_DISABLED;
+
+    return validValues.indexOf(currentValue.toLowerCase()) > -1;
+};
+
 HttpServer.prototype.isStarted = function () {
-    return this.nodeIsStarted() && this.javaIsStarted();
+    return this.nodeIsStarted() && (this.javaIsStarted() || this.javaIsDisabled());
 };
 
 HttpServer.prototype.start = function (callbackSuccess, callbackError) {
@@ -97,16 +114,25 @@ HttpServer.prototype.start = function (callbackSuccess, callbackError) {
 
     var self = this;
 
-    return $q.all([
-        executeNodeServer(),
-        executeJavaServer()
-    ]).then(function (processIds) {
-        self.pid.node = processIds[0];
-        self.pid.java = processIds[1];
-        callbackSuccess(processIds[0], processIds[1]);
-    }, function (errors) {
-        callbackError(errors);
-    });
+    if (this.javaIsDisabled()) {
+        return executeNodeServer().then(function (processId) {
+            self.pid.node = processId;
+            callbackSuccess(processId, null);
+        }, function (command, args, errorCode) {
+            callbackError(command, args, errorCode);
+        });
+    } else {
+        return $q.all([
+            executeNodeServer(),
+            executeJavaServer()
+        ]).then(function (processIds) {
+            self.pid.node = processIds[0];
+            self.pid.java = processIds[1];
+            callbackSuccess(processIds[0], processIds[1]);
+        }, function (errors) {
+            callbackError(errors);
+        });
+    }
 };
 
 module.exports = HttpServer;
