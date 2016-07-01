@@ -5,12 +5,14 @@ const BrowserWindow = electron.BrowserWindow;
 
 var MainScreen = function () {
     this.window = new BrowserWindow({
-        width:  800,
-        height: 600,
-        icon:   __dirname + '/../public/favicon.ico',
-        title: 'Duplicated Files',
-        center: true,
-        show:   true,
+        width:     800,
+        height:    600,
+        minWidth:  800,
+        minHeight: 600,
+        icon:      __dirname + '/../public/favicon.ico',
+        title:     'Duplicated Files',
+        center:    true,
+        show:      true,
         autoHideMenuBar: true,
         backgroundColor: '#E9E9E9'
     });
