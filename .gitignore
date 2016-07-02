@@ -8,6 +8,7 @@
 *.lock
 *.log
 *.log.*
+.env
 /public
 !/public/error-screen.html
 !/public/favicon.ico

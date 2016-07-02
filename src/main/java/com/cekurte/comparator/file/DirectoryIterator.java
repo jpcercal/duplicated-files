@@ -30,13 +30,15 @@ public class DirectoryIterator implements Runnable {
     private void getFilesRecursively() {
         File path = new File(this.path);
 
-        for (File file : path.listFiles()) {
-            if (file.isDirectory()) {
-                this.getFilesRecursively();
-            } else {
-                ComparableFile comparableFile = new ComparableFile(file);
+        if (path.isDirectory()) {
+           for (File file : path.listFiles()) {
+                if (file.isDirectory()) {
+                    this.getFilesRecursively();
+                } else {
+                    ComparableFile comparableFile = new ComparableFile(file);
 
-                this.files.add(comparableFile);
+                    this.files.add(comparableFile);
+                }
             }
         }
     }

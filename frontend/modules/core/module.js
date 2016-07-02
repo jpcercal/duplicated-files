@@ -9,9 +9,9 @@
 
     core.config(['ngToastProvider', function(ngToast) {
         ngToast.configure({
-            animation: 'slide',
-            verticalPosition: 'bottom',
-            horizontalPosition: 'right',
+            animation: 'fade',
+            verticalPosition: 'top',
+            horizontalPosition: 'right'
         });
     }]);
 

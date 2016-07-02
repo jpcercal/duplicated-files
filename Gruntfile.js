@@ -66,8 +66,6 @@ module.exports = function (grunt) {
                     '<%= bower_path %>/angular-sanitize/angular-sanitize.js',
                     '<%= bower_path %>/ngtoast/dist/ngToast.min.js',
                     '<%= bower_path %>/angular-loading-bar/build/loading-bar.min.js',
-                    '<%= bower_path %>/highlightjs/highlight.pack.min.js',
-                    '<%= bower_path %>/angular-highlightjs/build/angular-highlightjs.min.js',
                     '<%= bower_path %>/angular-tooltips/dist/angular-tooltips.min.js',
 
                     '<%= src_app_path %>/app.js',

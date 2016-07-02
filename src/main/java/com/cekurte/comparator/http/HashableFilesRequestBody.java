@@ -3,7 +3,6 @@ package com.cekurte.comparator.http;
 import java.util.Collection;
 import java.util.Map;
 
-import com.cekurte.comparator.file.ComparableFile;
 import com.cekurte.comparator.file.JsonMapper;
 
 public class HashableFilesRequestBody {

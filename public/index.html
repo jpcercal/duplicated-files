@@ -29,7 +29,7 @@
                     <h3 class="panel-title">Directories</h3>
                 </div>
                 <div class="panel-body">
-                    <textarea name="directories" class="form-control" rows="8" placeholder="Directories that will be used to search for duplicated files." ng-required="true" ng-model="directories" ng-minlength="1"></textarea>
+                    <textarea name="directories" class="form-control" rows="5" placeholder="Directories that will be used to search for duplicated files." ng-required="true" ng-model="directories" ng-minlength="1"></textarea>
                 </div>
                 <div class="panel-footer">
                     <div class="row">
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="col-xs-6 colors">
-                            <button type="submit" class="btn pull-right" ng-class="{'btn-success': !directoryForm.$invalid}" ng-disabled="directoryForm.$invalid">
+                            <button type="submit" class="btn pull-right" ng-class="{'btn-success': !directoryForm.$invalid && !isProcessingRequest()}" ng-disabled="directoryForm.$invalid || isProcessingRequest()">
                                 <span class="fa fa-commenting-o" aria-hidden="true"></span> Search for duplicated files
                             </button>
                             <span class="badge pull-right directories-length" ng-class="{true: 'bgcolor-red', false: 'bgcolor-green'}[getNumberOfLines(directories) < 1]">{{ getNumberOfLines(directories) }}</span>
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </form>
-        <div>
+        <div ng-show="hasDuplicatedFiles()">
             <form class="duplicatedFilesForm" name="duplicatedFilesForm">
                 <div ng-repeat="(hashMd5, files) in duplicatedFiles">
                     <div class="panel panel-default">
@@ -59,7 +59,6 @@
                                 <span class="badge badge-header bgcolor-darkblue">Size: {{ files[0].metadata.size }}</span>
                                 <span class="badge badge-header bgcolor-darkblue">Height: {{ files[0].metadata.height }}</span>
                                 <span class="badge badge-header bgcolor-darkblue">Width: {{ files[0].metadata.width }}</span>
-                                <span class="badge badge-header bgcolor-darkblue">Filenames: <em ng-repeat="file in files">{{ file.name }}{{ !$last ? '; ' : '.' }}</em></span>
                             </h3>
                         </div>
                         <div class="panel-body">
@@ -80,7 +79,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-danger pull-right" ng-click="submitDuplicatedFilesForm()">
+                <button type="submit" class="btn pull-right" ng-class="{'btn-danger': !isProcessingRequest()}" ng-disabled="isProcessingRequest()" ng-click="!isProcessingRequest() && submitDuplicatedFilesForm()">
                     <span class="fa fa-trash" aria-hidden="true"></span> Delete all gray pictures
                 </button>
             </form>
