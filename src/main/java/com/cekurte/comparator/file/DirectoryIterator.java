@@ -34,7 +34,7 @@ public class DirectoryIterator implements Runnable {
            for (File file : path.listFiles()) {
                 if (file.isDirectory()) {
                     this.getFilesRecursively();
-                } else {
+                } else if(file.isFile() && !file.isHidden()) {
                     ComparableFile comparableFile = new ComparableFile(file);
 
                     this.files.add(comparableFile);
